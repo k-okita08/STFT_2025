@@ -1,4 +1,4 @@
-%ステップ1: 音声ファイルの読み込みと窓処理
+% Step1: 音声ファイルの読み込みと窓処理
 clear; close all;
 
 % 音声ファイルの読み込み
@@ -44,3 +44,23 @@ for i = 1:numFrames
     % 窓関数を適用
     framedSignal(:, i) = frame .* hannWindow;
 end
+
+% Step2: 複素スペクトログラムを求める
+% FFTのパラメータ設定
+nfft = windowLength;
+
+% 複素スペクトログラム格納用配列
+complexSpectrogram = zeros(nfft, numFrames);
+
+% 
+for i = 1:numFrames
+    % 窓かけ済み信号をFFT
+    spectrum = fft(framedSignal(:, i), nfft);
+
+    % 複素スペクトログラムに格納
+    complexSpectrogram(:, i) = spectrum;
+end
+
+%Step3: パワースペクトログラムの表示
+
+%Step4: 自分の声を録音し、パワースペクトログラムの表示
