@@ -1,5 +1,5 @@
 % Step1: 音声ファイルの読み込みと窓処理
-clear; close all;
+clear; close all; clc;
 
 % 音声ファイルの読み込み
 [audio, Fs] = audioread("yeah.wav");
@@ -15,18 +15,21 @@ end
 windowLength = 512;
 shiftLength = 256;
 
+% FFTのパラメータ設定
+nfft = windowLength;
+
 % 信号の先頭にゼロパディングを追加
-x = [zeros(shiftLength, 1); x];
+x = [zeros(windowLength / 2, 1); x];
 
 % ハン窓の実装
 hannWindow = 0.5 * (1 - cos(2 * pi * (0:windowLength - 1)' / (windowLength - 1)));
 
 % 信号の長さとフレーム数の計算
 signalLength = length(x);
-numFrames = floor((signalLength - windowLength) / shiftLength) + 1;
+numFrames = floor(signalLength / shiftLength);
 
-% 短時間信号を格納する配列を初期化
-framedSignal = zeros(windowLength, numFrames);
+% 複素スペクトログラム格納用配列
+complexSpectrogram = zeros(nfft, numFrames);
 
 % 信号を短時間フレームに分割
 for i = 1:numFrames
@@ -42,25 +45,33 @@ for i = 1:numFrames
     end
 
     % 窓関数を適用
-    framedSignal(:, i) = frame .* hannWindow;
-end
+    framedSignal = frame .* hannWindow;
 
-% Step2: 複素スペクトログラムを求める
-% FFTのパラメータ設定
-nfft = windowLength;
-
-% 複素スペクトログラム格納用配列
-complexSpectrogram = zeros(nfft, numFrames);
-
-% 
-for i = 1:numFrames
     % 窓かけ済み信号をFFT
-    spectrum = fft(framedSignal(:, i), nfft);
+    spectrum = fft(framedSignal, nfft, 1);
 
     % 複素スペクトログラムに格納
     complexSpectrogram(:, i) = spectrum;
 end
 
-%Step3: パワースペクトログラムの表示
+% パワースペクトログラムの表示
+powerSpectrogram = abs(complexSpectrogram).^2;
 
-%Step4: 自分の声を録音し、パワースペクトログラムの表示
+% dBスケールに変換
+powerSpectrogram_dB = 10 * log10(powerSpectrogram + eps); % log(0)回避
+
+% 時間軸と周波数軸の生成
+time = (0:numFrames-1) * shiftLength / Fs; % 秒
+freq = (0:nfft-1) * Fs / nfft;             % Hz
+
+% プロット
+figure;
+imagesc(time, freq, powerSpectrogram_dB);
+axis xy;
+colormap(jet);
+colorbar('Label', 'Power (dB)');
+xlabel('Time (seconds)');
+ylabel('Frequency (Hz)');
+title('Power Spectrogram (dB)');
+set(gca, 'FontSize', 14);
+ylim([0 Fs/2]);
