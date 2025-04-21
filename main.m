@@ -68,10 +68,10 @@ freq = (0:nfft-1) * Fs / nfft;             % Hz
 imagesc(time, freq, powerSpectrogram_dB);
 axis xy;
 colormap(jet);
-xlabel('Time (seconds)');
-ylabel('Frequency (Hz)');
-title('Power Spectrogram (dB)');
+xlabel('Time [s]');
+ylabel('Frequency [Hz]');
+title('Power Spectrogram');
 set(gca, 'FontSize', 14);
 ylim([0 Fs/2]);
 c = colorbar;
-ylabel(c, 'Power (dB)');  % または c.Label.String = 'Power (dB)';
+ylabel(c, 'Power [dB]');  % または c.Label.String = 'Power (dB)';
