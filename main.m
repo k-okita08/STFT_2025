@@ -58,20 +58,20 @@ end
 powerSpectrogram = abs(complexSpectrogram).^2;
 
 % dBスケールに変換
-powerSpectrogram_dB = 10 * log10(powerSpectrogram + eps); % log(0)回避
+powerSpectrogram_dB = 10 * log10(powerSpectrogram); % log(0)回避
 
 % 時間軸と周波数軸の生成
 time = (0:numFrames-1) * shiftLength / Fs; % 秒
 freq = (0:nfft-1) * Fs / nfft;             % Hz
 
-% プロット
-figure;
+% グラフ作成
 imagesc(time, freq, powerSpectrogram_dB);
 axis xy;
 colormap(jet);
-colorbar('Label', 'Power (dB)');
 xlabel('Time (seconds)');
 ylabel('Frequency (Hz)');
 title('Power Spectrogram (dB)');
 set(gca, 'FontSize', 14);
 ylim([0 Fs/2]);
+c = colorbar;
+ylabel(c, 'Power (dB)');  % または c.Label.String = 'Power (dB)';
