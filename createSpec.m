@@ -1,4 +1,3 @@
-
 function complexSpec =  createSpec(audio, Fs, winLen, shiftLen)
     
     % モノラル化（左チャンネルのみ使用）
