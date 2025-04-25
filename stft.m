@@ -1,12 +1,4 @@
-function complexSpec =  createSpec(audio, Fs, winLen, shiftLen)
-    
-    % モノラル化（左チャンネルのみ使用）
-    if size(audio, 2) == 2
-        x = audio(:, 1);  % ステレオの場合、左チャンネルを抽出
-    else
-        x = audio;        % モノラルの場合はそのまま使用
-    end
-    
+function complexSpec =  stft(x, Fs, winLen, shiftLen)
     % FFTのパラメータ設定
     nfft = winLen;
     
