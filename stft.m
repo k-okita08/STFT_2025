@@ -1,4 +1,11 @@
 function complexSpec =  stft(x, Fs, winLen, shiftLen)
+%これはstftを実行する関数です
+%audio          :音声信号（sigLen,1）
+%Fs             :サンプリング周波数(scalar, positive)
+%WinLen         :窓長(scalar, positive)
+%ShiftWidth     :シフト長(scalar, positive)
+%complexSpec    :複素スペクトログラムの格納行列(freq × time)
+
     % FFTのパラメータ設定
     nfft = winLen;
     
